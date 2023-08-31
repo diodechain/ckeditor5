@@ -15,7 +15,14 @@ import { CKBox } from '@ckeditor/ckeditor5-ckbox';
 import { CKFinder } from '@ckeditor/ckeditor5-ckfinder';
 import { EasyImage } from '@ckeditor/ckeditor5-easy-image';
 import { Heading } from '@ckeditor/ckeditor5-heading';
-import { Image, ImageCaption, ImageStyle, ImageToolbar, ImageUpload, PictureEditing } from '@ckeditor/ckeditor5-image';
+import {
+	Image,
+	ImageCaption,
+	ImageStyle,
+	ImageToolbar,
+	ImageUpload,
+	PictureEditing,
+} from '@ckeditor/ckeditor5-image';
 import { Indent } from '@ckeditor/ckeditor5-indent';
 import { Link } from '@ckeditor/ckeditor5-link';
 import { List } from '@ckeditor/ckeditor5-list';
@@ -26,6 +33,15 @@ import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { TextTransformation } from '@ckeditor/ckeditor5-typing';
 import { CloudServices } from '@ckeditor/ckeditor5-cloud-services';
 
+// import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment'; // <--- ADDED
+import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown';
+import DiodeImageUploader from './DiodeImageUploader';
+import DiodeSourceEditor from './DiodeSourceEditor';
+import AutoSave from '@ckeditor/ckeditor5-autosave/src/autosave';
+import { Range } from '@ckeditor/ckeditor5-engine';
+import viewToPainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext';
+
+// @ts-ignore
 export default class ClassicEditor extends ClassicEditorBase {
 	public static override builtinPlugins = [
 		Essentials,
@@ -53,18 +69,44 @@ export default class ClassicEditor extends ClassicEditorBase {
 		PictureEditing,
 		Table,
 		TableToolbar,
-		TextTransformation
+		TextTransformation,
+
+		TextTransformation,
+		// Alignment,
+		Markdown,
+		DiodeImageUploader,
+		DiodeSourceEditor,
+		AutoSave,
 	];
 
 	public static override defaultConfig = {
 		toolbar: {
 			items: [
-				'undo', 'redo',
-				'|', 'heading',
-				'|', 'bold', 'italic',
-				'|', 'link', 'uploadImage', 'insertTable', 'blockQuote', 'mediaEmbed',
-				'|', 'bulletedList', 'numberedList', 'outdent', 'indent'
-			]
+				'undo',
+				'redo',
+				'|',
+				'heading',
+				'|',
+				'bold',
+				'italic',
+				'link',
+				'|',
+				// 'alignment',
+				// '|',
+				'bulletedList',
+				'numberedList',
+				'|',
+				'outdent',
+				'indent',
+				'|',
+				'diodeImageUploader',
+				'blockQuote',
+				'insertTable',
+				'mediaEmbed',
+				'|',
+				'diodeSourceEditor',
+				'emoji',
+			],
 		},
 		image: {
 			toolbar: [
@@ -73,17 +115,27 @@ export default class ClassicEditor extends ClassicEditorBase {
 				'imageStyle:side',
 				'|',
 				'toggleImageCaption',
-				'imageTextAlternative'
-			]
+				'imageTextAlternative',
+			],
 		},
 		table: {
-			contentToolbar: [
-				'tableColumn',
-				'tableRow',
-				'mergeTableCells'
-			]
+			contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
 		},
 		// This value must be kept in sync with the language defined in webpack.config.js.
-		language: 'en'
+		language: 'en',
+		objects: {
+			Range,
+			viewToPainText,
+		},
+		link: {
+			mode: 'automatic',
+			callback: (url: string) => url.startsWith('diode://'),
+			attributes: {
+				target: '_blank',
+			},
+		},
 	};
 }
+
+// @ts-ignore
+ClassicEditor.viewToPainText = viewToPainText;
