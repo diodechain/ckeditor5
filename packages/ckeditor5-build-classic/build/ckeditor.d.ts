@@ -19,6 +19,8 @@ import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { CloudServices } from '@ckeditor/ckeditor5-cloud-services';
 import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown';
 import DiodeImageUploader from './DiodeImageUploader';
+import { Range } from '@ckeditor/ckeditor5-engine';
+import viewToPainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext';
 export default class ClassicEditor extends ClassicEditorBase {
     static builtinPlugins: (typeof Essentials | typeof Heading | typeof Autoformat | typeof Bold | typeof Italic | typeof BlockQuote | typeof CloudServices | typeof Image | typeof ImageCaption | typeof ImageStyle | typeof ImageToolbar | typeof ImageUpload | typeof CKBox | typeof CKFinder | typeof Indent | typeof Link | typeof List | typeof MediaEmbed | typeof Table | typeof TableToolbar | typeof DiodeImageUploader | typeof PictureEditing | typeof Markdown)[];
     static defaultConfig: {
@@ -32,5 +34,16 @@ export default class ClassicEditor extends ClassicEditorBase {
             contentToolbar: string[];
         };
         language: string;
+        objects: {
+            Range: typeof Range;
+            viewToPainText: typeof viewToPainText;
+        };
+        link: {
+            mode: string;
+            callback: (url: string) => boolean;
+            attributes: {
+                target: string;
+            };
+        };
     };
 }
